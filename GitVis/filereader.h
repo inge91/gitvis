@@ -1,10 +1,10 @@
 #ifndef FILEREADER_H
 #define FILEREADER_H
 
+#include "treemodel.h"
 #include <qstring.h>
 #include <qobject.h>
 #include <qgit2/qgitrepository.h>
-#include <qgit2/qgitrevwalk.h>
 #include <git2.h>
 #include <experimental/optional>
 #include <iostream>
@@ -13,6 +13,8 @@ class FileReader : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(QString gitFolder READ getGitFolder WRITE setGitFolder NOTIFY gitFolderChanged)
+    Q_PROPERTY(QObject* treeModel READ getTreeModel NOTIFY gitFolderChanged)
+
 public:
     FileReader();
 
@@ -32,24 +34,15 @@ public:
             // TODO: Send warning back to qml
             return;
         }
+        delete _repository;
         _repository = new LibQGit2::Repository(repo, true);
         emit gitFolderChanged();
-        gitRevWalk();
     }
 
-    void gitRevWalk() {
-        LibQGit2::RevWalk rev(*_repository);
-        std::cout<< _repository->head().name().toStdString() <<std::endl;
-        git_commit* commit;
-
-        git_commit_lookup(&commit, _repository->data(), _repository->head().target().data());
-        LibQGit2::Commit c(commit);
-        rev.push(_repository->head().target());
-        LibQGit2::OId
-        rev.next()
-        while() {
-
-        }
+    QObject* getTreeModel() {
+        delete _treeModel;
+        _treeModel = new TreeModel(_repository);
+        return _treeModel;
     }
 
 
@@ -57,6 +50,7 @@ signals:
     void gitFolderChanged();
 
 private:
+    TreeModel* _treeModel = nullptr;
     LibQGit2::Repository* _repository = nullptr;
 };
 

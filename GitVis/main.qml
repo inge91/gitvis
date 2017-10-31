@@ -6,32 +6,45 @@ import QtQuick.Layouts 1.1
 
 Window {
     // Path should be a c++ git property.
+    id: window
     visible: true
     width: 640
     height: 480
     title: qsTr("Hello World")
 
-
-    RowLayout{
-        anchors.bottom: parent.bottom
-        width: parent.width
-        spacing:20
-        Label{
-            text: "Git Repo:"
+    ColumnLayout {
+        anchors.fill: parent
+        TreeVisualisation
+        {
+            width: window.width
+            Layout.fillHeight: true
+            model: fileReader.treeModel
         }
 
-        TextField{
-            text: fileReader.gitFolder
-            Layout.fillWidth: true
-        }
-        Button {
-            text: "Change"
-            onClicked:
-            {
-                fileDialog.visible = true
+        RowLayout{
+            anchors.bottom: parent.bottom
+            width: parent.width
+            spacing:20
+            Label{
+                text: "Git Repo:"
+            }
+
+            TextField{
+                text: fileReader.gitFolder
+                Layout.fillWidth: true
+            }
+            Button {
+                text: "Change"
+                onClicked:
+                {
+                    fileDialog.visible = true
+                }
             }
         }
+
     }
+
+
 
     FileDialog{
         id: fileDialog

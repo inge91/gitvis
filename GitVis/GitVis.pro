@@ -4,7 +4,9 @@ QT += qml quick
 CONFIG += c++14
 
 SOURCES += main.cpp \
-    filereader.cpp
+    filereader.cpp \
+    treemodel.cpp \
+    treeitem.cpp
 
 RESOURCES += qml.qrc
 
@@ -35,4 +37,6 @@ unix:!macx: LIBS += -lgit2
 unix:!macx: LIBS += -lqgit2
 
 HEADERS += \
-    filereader.h
+    filereader.h \
+    treemodel.h \
+    treeitem.h

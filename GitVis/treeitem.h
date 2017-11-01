@@ -12,7 +12,7 @@ class TreeItem
 
 public:
     TreeItem();
-    explicit TreeItem(LibQGit2::Commit const& commit, TreeItem *parentItem = 0);
+    explicit TreeItem(LibQGit2::Commit const& commit, TreeItem *parentItem = nullptr);
     ~TreeItem();
 
     void appendChild(TreeItem *child);
@@ -22,7 +22,8 @@ public:
     int columnCount() const;
     QVariant data(int column) const;
     int row() const;
-    TreeItem *parentItem();
+    TreeItem* parentItem();
+    void setParent(TreeItem* parent);
 
 private:
     QList<TreeItem*> _childItems;

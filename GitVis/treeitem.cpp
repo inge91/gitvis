@@ -7,7 +7,7 @@ TreeItem::TreeItem()
     _data[AUTHOR] = "author";
 }
 
-TreeItem::TreeItem(LibQGit2::Commit const& commit, TreeItem *parent)
+TreeItem::TreeItem(LibQGit2::Commit const& commit, TreeItem* parent)
 {
     _parentItem = parent;
     _data[MESSAGE] = commit.message();
@@ -56,4 +56,9 @@ QVariant TreeItem::data(int column) const
 TreeItem *TreeItem::parentItem()
 {
     return _parentItem;
+}
+
+void TreeItem::setParent(TreeItem* parent)
+{
+    _parentItem = parent;
 }

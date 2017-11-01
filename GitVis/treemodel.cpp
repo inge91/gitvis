@@ -81,31 +81,40 @@ QVariant TreeModel::headerData(int section, Qt::Orientation orientation,
     return QVariant();
 }
 
+// Should not belong as part of this class.
 void TreeModel::setupModelData(LibQGit2::Repository const* _repository) {
 
     emit beginResetModel();
     if(_rootItem)
     {
-        //delete everything
+        //delete everything; would work better in case of unique ptrs
     }
 
     _rootItem = new TreeItem();
-    TreeItem* parent = _rootItem;
 
     LibQGit2::RevWalk rev(*_repository);
 
     QStringList branches = _repository->listReferences();
 
+    TreeItem* tree_item = nullptr;
+    TreeItem* previous_item = nullptr;
+
     for(auto const& branch : branches) {
         rev.push(_repository->lookupRefOId(branch));
         LibQGit2::Commit c;
         while(rev.next(c)) {
-            auto child = new TreeItem(c, parent);
-            parent->appendChild(child);
-            parent = child;
+            tree_item = new TreeItem(c);
+            if(previous_item != nullptr)
+            {
+                tree_item->appendChild(previous_item);
+                previous_item->setParent(tree_item);
+            }
+            previous_item = tree_item;
         }
         break;
     }
+    previous_item->setParent(_rootItem);
+    _rootItem->appendChild(previous_item);
     emit endResetModel();
 }
 
